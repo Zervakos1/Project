@@ -126,7 +126,7 @@ class Blackjack:
     while True:
         choice = input("How many players will play? ").lower()
         try:
-            if choice == 1 || choice <=7:
+            if choice >= 1 && choice <=7:
                 user = game.login()
             else:
                 print("Invalid input. Player(s) must be between 1 to 7")
