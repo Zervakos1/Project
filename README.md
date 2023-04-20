@@ -122,17 +122,16 @@ class Blackjack:
                 print("Login successful!")
                 return user
         print("Invalid username or password.")
+        
     while True:
-    choice = input("Would you like to login or register? ").lower()
-    if choice == "login":
-        user = game.login()
-        if user:
-            print(f"Welcome {user['username']}. Your balance is {user['balance']}.")
-            break
-    elif choice == "register":
-        game.register()
-    else:
-        print("Invalid choice. Please enter 'login' or 'register'.")   
+        choice = input("How many players will play? ").lower()
+        try:
+            if choice == 1 || choice <=7:
+                user = game.login()
+            else:
+                print("Invalid input. Player(s) must be between 1 to 7")
+        except:
+            print("Wrong input. Must be a number")   
         
     def play(self):
         print("Starting game of blackjack.")
