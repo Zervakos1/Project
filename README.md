@@ -44,9 +44,10 @@ class Hand:
             self.aces -= 1
 
 class Player:
-    def __init__(self, name):
+    def __init__(self, name, chips=100):
         self.name = name
         self.hand = Hand()
+        self.chips = chips
 
     def hit_or_stand(self, deck):
         while True:
@@ -63,6 +64,15 @@ class Player:
                 return "stand"
             else:
                 print("Invalid input. Please enter 'hit' or 'stand'.")
+
+    def make_bet(self):
+        while True:
+            bet = int(input(f"{self.name}, how many chips would you like to bet? "))
+            if bet < 1 or bet > self.chips:
+                print(f"Invalid bet. Please enter a bet between 1 and {self.chips}.")
+            else:
+                self.chips -= bet
+                return bet
 
 class Dealer:
     def __init__(self):
@@ -90,6 +100,7 @@ class Blackjack:
         print("Starting game of blackjack.")
         for player in self.players:
             print(f"{player.name}, it's your turn.")
+            player.make_bet()
             player.hand.add_card(self.deck.deal_card())
             player.hand.add_card(self.deck.deal_card())
             print(f"{player.name} draws {player.hand.cards[0]} and {player.hand.cards[1]}")
@@ -103,16 +114,24 @@ class Blackjack:
         if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
             for player in self.players:
                 if player.hand.value <= 21:
+                    player.chips += 2 * player.make_bet()
                     print(f"{player.name} wins!")
+                    print(f"{player.name} now has {player.chips} chips.")
         else:
             dealer_hand_value = self.dealer.hand.value
             for player in self.players:
                 if player.hand.value <= 21:
                     if player.hand.value > dealer_hand_value:
+                        player.chips += 2 * player.make_bet()
                         print(f"{player.name} wins!")
+                        print(f"{player.name} now has {player.chips} chips.")
                     elif player.hand.value == dealer_hand_value:
+                        player.chips += player.make_bet()
                         print(f"{player.name} ties with the dealer.")
+                        print(f"{player.name} now has {player.chips} chips.")
                     else:
                         print(f"{player.name} loses.")
+                        print(f"{player.name} now has {player.chips} chips.")
+
 blackjack_game = Blackjack()
 blackjack_game.play()
