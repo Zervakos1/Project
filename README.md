@@ -92,10 +92,48 @@ class Dealer:
             return "stand"
 class Blackjack:
     def __init__(self):
-        self.players = [Player(f"Player {i+1}") for i in range(4)]
+        self.users = []
         self.dealer = Dealer()
         self.deck = Deck()
-
+    def load_users_from_file(self):
+        try:
+            with open("users.json", "r") as f:
+                self.users = json.load(f)
+        except FileNotFoundError:
+            pass
+    def save_users_to_file(self):
+        with open("users.json", "w") as f:
+            json.dump(self.users, f)
+    def register(self):
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        for user in self.users:
+            if user["username"] == username:
+                print("Username already exists.")
+                return
+        self.users.append({"username": username, "password": password, "balance": 100})
+        print("Account created successfully.")
+        self.save_users_to_file()
+    def login(self):
+        username = input("Enter your username: ")
+        password = input("Enter your password: ")
+        for user in self.users:
+            if user["username"] == username and user["password"] == password:
+                print("Login successful!")
+                return user
+        print("Invalid username or password.")
+    while True:
+    choice = input("Would you like to login or register? ").lower()
+    if choice == "login":
+        user = game.login()
+        if user:
+            print(f"Welcome {user['username']}. Your balance is {user['balance']}.")
+            break
+    elif choice == "register":
+        game.register()
+    else:
+        print("Invalid choice. Please enter 'login' or 'register'.")   
+        
     def play(self):
         print("Starting game of blackjack.")
         for player in self.players:
