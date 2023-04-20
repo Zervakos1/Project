@@ -114,3 +114,5 @@ class Blackjack:
                         print(f"{player.name} ties with the dealer.")
                     else:
                         print(f"{player.name} loses.")
+blackjack_game = Blackjack()
+blackjack_game.play()
