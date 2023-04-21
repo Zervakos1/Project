@@ -172,3 +172,57 @@ class Blackjack:
 
 blackjack_game = Blackjack()
 blackjack_game.play()
+
+
+
+
+
+
+
+
+import openpyxl
+import os
+
+def register():
+    """Register a new user."""
+    username = input("Enter a username: ")
+    password = input("Enter a password: ")
+    workbook = openpyxl.load_workbook("users.xlsx")
+    sheet = workbook.active
+    row = sheet.max_row + 1
+    sheet.cell(row=row, column=1).value = username
+    sheet.cell(row=row, column=2).value = password
+    workbook.save("users.xlsx")
+    print("Registration successful!\n")
+
+def login():
+    """Log in an existing user."""
+    username = input("Enter your username: ")
+    password = input("Enter your password: ")
+    workbook = openpyxl.load_workbook("users.xlsx")
+    sheet = workbook.active
+    for row in range(1, sheet.max_row + 1):
+        if sheet.cell(row=row, column=1).value == username and sheet.cell(row=row, column=2).value == password:
+            print("Login successful!\n")
+            return
+    print("Invalid username or password.\n")
+
+def main():
+    """Main function to run the program."""
+    if not os.path.exists("users.xlsx"):
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        sheet.cell(row=1, column=1).value = "Username"
+        sheet.cell(row=1, column=2).value = "Password"
+        workbook.save("users.xlsx")
+    while True:
+        choice = input("Enter 1 to register, 2 to login, or q to quit: ")
+        if choice == "1":
+            register()
+        elif choice == "2":
+            login()
+        elif choice.lower() == "q":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please try again.\n")
