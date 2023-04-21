@@ -209,12 +209,6 @@ def login():
 
 def main():
     """Main function to run the program."""
-    if not os.path.exists("users.xlsx"):
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
-        sheet.cell(row=1, column=1).value = "Username"
-        sheet.cell(row=1, column=2).value = "Password"
-        workbook.save("users.xlsx")
     while True:
         choice = input("Enter 1 to register, 2 to login, or q to quit: ")
         if choice == "1":
