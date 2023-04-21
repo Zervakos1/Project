@@ -36,8 +36,8 @@ class Hand:
         self.cards.append(card)
         print(f"Card drawn: {card}")
         self.value += card.value
-        if card.rank == "Ace":
-            self.aces += 1
+        if card.rank == "A":
+            self.aces += 11
 
     def adjust_for_ace(self):
         while self.value > 21 and self.aces > 0:
@@ -77,17 +77,23 @@ class Player:
             else:
                 self.chips -= bet
                 return bet
-
+    def total(self):
+        if (player.hand.value > dealer.hand.value):
+            final = 2*bet
+            return final
+        elif(player.hand.value == dealer.hand.value):
+            final += bet
+            return final
 class Dealer:
     def __init__(self):
         self.name = "Dealer"
         self.hand = Hand()
 
     def hit_until_stand_or_bust(self, deck):
+        print(f"The value is {self.hand.value}")
         while self.hand.value < 17:
             self.hand.add_card(deck.deal_card())
             self.hand.adjust_for_ace()
-            print(f"The value is {self.hand.value}")
         if self.hand.value > 21:
             print("Dealer busts!")
             return "bust"
@@ -127,12 +133,12 @@ class Blackjack:
             for player in self.players:
                 if player.hand.value <= 21:
                     if player.hand.value > dealer_hand_value:
-                        player.chips += 2 * player.make_bet()
+                        player.chips += 2 * player.total
                         print("-----------------------------------------------------------------")
                         print(f"{player.name} wins!")
                         print(f"{player.name} now has {player.chips} chips.")
                     elif player.hand.value == dealer_hand_value:
-                        player.chips += player.make_bet()
+                        player.chips += player.total
                         print("-----------------------------------------------------------------")
                         print(f"{player.name} ties with the dealer.")
                         print(f"{player.name} now has {player.chips} chips.")
