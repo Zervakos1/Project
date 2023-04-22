@@ -214,6 +214,11 @@ blackjack_game.play()
             elif choice == "register":
                 username = input("Enter a username: ").strip()
                 password = input("Enter a password: ").strip()
+
+                # Check if the username already exists
+                if username in users:
+                    print("Username already exists. Please choose a different username.")
+                    return
    
 
                 # Add the new username and password to the file
