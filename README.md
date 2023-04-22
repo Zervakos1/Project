@@ -176,6 +176,7 @@ blackjack_game.play()
 
 
 # Open the file for reading and writing
+
 with open("users.txt", "a+") as file:
     
     # Read the contents of the file
