@@ -65,11 +65,11 @@ class Player:
                     elif self.hand.value == 21:
                         print(f"{self.name} has a hand of 21")
                         break
-                    elif action.lower() == "stand":
-                        print(f"{self.name} stands with a hand of {self.hand.value}.")
-                        return "stand"
-                    else:
-                        raise ValueError("Invalid input. Please enter 'hit' or 'stand'.")
+                elif action.lower() == "stand":
+                     print(f"{self.name} stands with a hand of {self.hand.value}.")
+                     return "stand"
+                else:
+                     raise ValueError("Invalid input. Please enter 'hit' or 'stand'.")
             except ValueError as e:
                 print("Wrong input. Please enter 'hit' or 'stand'")
 
