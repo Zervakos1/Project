@@ -112,62 +112,73 @@ class Blackjack:
         self.players = [Player(f"Player {i+1}") for i in range(4)]
         self.dealer = Dealer()
         self.deck = Deck()
-
+    
     def play(self):
-        print("Starting game of blackjack.")
-        print("-----------------------------------------------------------------")
-        quit = 0
-        choice = "0"
-        while quit != 1:
-            while choice != "login" and choice != "play" and choice != "quit":
-                print("Login | Play | Quit")
-                choice = input("Please select one of the above options: ").strip().lower()
-                if choice != "login" and choice != "play" and choice != "quit":
-                    print("Incorrect input")
-            if choice == "register":
-               ...
-            elif choice == "play":
-                ...
-                for player in self.players:
-                    print(f"{player.name}, it's your turn.")
-                    bet = player.make_bet()
-                    player.hand.add_card(self.deck.deal_card())
-                    player.hand.add_card(self.deck.deal_card())
-                    print("-----------------------------------------------------------------")
-                    print("Dealer's turn.")
-                    self.dealer.hand.add_card(self.deck.deal_card())
-                    self.dealer.hand.add_card(self.deck.deal_card())
-                    print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
+        with open("users.txt", "a+") as file:
+            # Read the contents of the file
+            file.seek(0)
+            contents = file.read()
+            # Create a dictionary to store usernames and passwords
+            users = {}
+            # Split the contents of the file by newline and loop through each line
+            for line in contents.split("\n"):
+                # Split each line into username and password and add to the dictionary
+                if line:
+                    username, password = line.split(",")
+                    users[username] = password
+            print("Starting game of blackjack.")
+            print("-----------------------------------------------------------------")
+            quit = 0
+            while quit != 1:
+                while choice != "register" and choice != "play" and choice != "quit":
+                    choice = ""
+                    choice = input("Do you want to:\n1.register \n2.play \n3.quit ").strip().lower()
+                    if choice != "register" and choice != "play" and choice != "quit":
+                        print("Incorrect input. Please enter one of the choices shown.")
+                if choice == "register":
+                    ...
+                elif choice == "play":
+                    ...
                     for player in self.players:
-                        if player.hit_or_stand(self.deck) == "bust":
-                            continue
-                    if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+                        print(f"{player.name}, it's your turn.")
+                        bet = player.make_bet()
+                        player.hand.add_card(self.deck.deal_card())
+                        player.hand.add_card(self.deck.deal_card())
+                        print("-----------------------------------------------------------------")
+                        print("Dealer's turn.")
+                        self.dealer.hand.add_card(self.deck.deal_card())
+                        self.dealer.hand.add_card(self.deck.deal_card())
+                        print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
                         for player in self.players:
-                            if player.hand.value <= 21:
-                                player.win_bet(bet)
-                                print(f"{player.name} wins!")
-                                print(f"{player.name} now has {player.chips} chips.")
-                    else:
-                        dealer_hand_value = self.dealer.hand.value
-                        for player in self.players:
-                            if player.hand.value <= 21:
-                                if player.hand.value > dealer_hand_value:
+                            if player.hit_or_stand(self.deck) == "bust":
+                                continue
+                        if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+                            for player in self.players:
+                                if player.hand.value <= 21:
                                     player.win_bet(bet)
-                                    print("-----------------------------------------------------------------")
                                     print(f"{player.name} wins!")
                                     print(f"{player.name} now has {player.chips} chips.")
-                                elif player.hand.value == dealer_hand_value:
-                                    player.tie_bet(bet)
-                                    print("-----------------------------------------------------------------")
-                                    print(f"{player.name} ties with the dealer.")
-                                    print(f"{player.name} now has {player.chips} chips.")
-                                else:
-                                    print("-----------------------------------------------------------------")
-                                    print(f"{player.name} loses.")
-                                    print(f"{player.name} now has {player.chips} chips.")
-             else:
-                quit == 1
-                print "You have successfully quit the program"           
+                        else:
+                            dealer_hand_value = self.dealer.hand.value
+                            for player in self.players:
+                                if player.hand.value <= 21:
+                                    if player.hand.value > dealer_hand_value:
+                                        player.win_bet(bet)
+                                        print("-----------------------------------------------------------------")
+                                        print(f"{player.name} wins!")
+                                        print(f"{player.name} now has {player.chips} chips.")
+                                    elif player.hand.value == dealer_hand_value:
+                                        player.tie_bet(bet)
+                                        print("-----------------------------------------------------------------")
+                                        print(f"{player.name} ties with the dealer.")
+                                        print(f"{player.name} now has {player.chips} chips.")
+                                    else:
+                                        print("-----------------------------------------------------------------")
+                                        print(f"{player.name} loses.")
+                                        print(f"{player.name} now has {player.chips} chips.")
+                else:
+                    quit == 1
+                    print "You have successfully quit the program"           
 blackjack_game = Blackjack()
 blackjack_game.play()
 
@@ -212,14 +223,16 @@ blackjack_game.play()
                     return
 
             elif choice == "register":
-                username = input("Enter a username: ").strip()
-                password = input("Enter a password: ").strip()
+
 
                 # Check if the username already exists
-                if username in users:
-                    print("Username already exists. Please choose a different username.")
-                    return
-   
+                while True:
+                    username = input("Enter a username: ").strip()
+                    if username in users:
+                        print("Username already exists. Please choose a different username.")
+                    else:
+                        break    
+                password = input("Enter a password: ").strip()
 
                 # Add the new username and password to the file
                 file.write(f"{username},{password}\n")
