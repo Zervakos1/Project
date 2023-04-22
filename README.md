@@ -116,43 +116,107 @@ class Blackjack:
     def play(self):
         print("Starting game of blackjack.")
         print("-----------------------------------------------------------------")
-        for player in self.players:
-            print(f"{player.name}, it's your turn.")
-            bet = player.make_bet()
-            player.hand.add_card(self.deck.deal_card())
-            player.hand.add_card(self.deck.deal_card())
-            print("-----------------------------------------------------------------")
-        print("Dealer's turn.")
-        self.dealer.hand.add_card(self.deck.deal_card())
-        self.dealer.hand.add_card(self.deck.deal_card())
-        print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
-        for player in self.players:
-            if player.hit_or_stand(self.deck) == "bust":
-                continue
-        if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+        quit = 0
+        choice = "0"
+        while quit == 0:
+            While choice
+                print("Login | Register | Quit")
+                choice = input("Please select one of the above options: ").strip().lower()
+            
             for player in self.players:
-                if player.hand.value <= 21:
-                    player.win_bet(bet)
-                    print(f"{player.name} wins!")
-                    print(f"{player.name} now has {player.chips} chips.")
-        else:
-            dealer_hand_value = self.dealer.hand.value
+                print(f"{player.name}, it's your turn.")
+                bet = player.make_bet()
+                player.hand.add_card(self.deck.deal_card())
+                player.hand.add_card(self.deck.deal_card())
+                print("-----------------------------------------------------------------")
+            print("Dealer's turn.")
+            self.dealer.hand.add_card(self.deck.deal_card())
+            self.dealer.hand.add_card(self.deck.deal_card())
+            print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
             for player in self.players:
-                if player.hand.value <= 21:
-                    if player.hand.value > dealer_hand_value:
-                         player.win_bet(bet)
-                         print("-----------------------------------------------------------------")
-                         print(f"{player.name} wins!")
-                         print(f"{player.name} now has {player.chips} chips.")
-                    elif player.hand.value == dealer_hand_value:
-                         player.tie_bet(bet)
-                         print("-----------------------------------------------------------------")
-                         print(f"{player.name} ties with the dealer.")
-                         print(f"{player.name} now has {player.chips} chips.")
-                    else:
-                        print("-----------------------------------------------------------------")
-                        print(f"{player.name} loses.")
+                if player.hit_or_stand(self.deck) == "bust":
+                    continue
+            if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+                for player in self.players:
+                    if player.hand.value <= 21:
+                        player.win_bet(bet)
+                        print(f"{player.name} wins!")
                         print(f"{player.name} now has {player.chips} chips.")
+            else:
+                dealer_hand_value = self.dealer.hand.value
+                for player in self.players:
+                    if player.hand.value <= 21:
+                        if player.hand.value > dealer_hand_value:
+                            player.win_bet(bet)
+                            print("-----------------------------------------------------------------")
+                            print(f"{player.name} wins!")
+                            print(f"{player.name} now has {player.chips} chips.")
+                        elif player.hand.value == dealer_hand_value:
+                            player.tie_bet(bet)
+                            print("-----------------------------------------------------------------")
+                            print(f"{player.name} ties with the dealer.")
+                            print(f"{player.name} now has {player.chips} chips.")
+                        else:
+                            print("-----------------------------------------------------------------")
+                            print(f"{player.name} loses.")
+                            print(f"{player.name} now has {player.chips} chips.")
 blackjack_game = Blackjack()
 blackjack_game.play()
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+import openpyxl
+
+# Define the Excel file name and sheet name
+filename = "users.xlsx"
+sheetname = "users"
+
+# Load the workbook and select the worksheet
+workbook = openpyxl.load_workbook(filename)
+worksheet = workbook[sheetname]
+
+# Define the column indexes for username and password
+username_col = 1
+password_col = 2
+
+# Prompt the user to choose login or register
+while True:
+    choice = input("Do you want to login or register? ").strip().lower()
+    if choice == "login" or choice == "register":
+        break
+
+# Handle login
+if choice == "login":
+    # Prompt the user for their username and password
+    username = input("Username: ")
+    password = input("Password: ")
+
+    # Check if the username and password match a row in the worksheet
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        if row[username_col-1] == username and row[password_col-1] == password:
+            print("Login successful!")
+            break
+    else:
+        print("Invalid username or password")
+
+# Handle register
+elif choice == "register":
+    # Prompt the user for their desired username and password
+    username = input("Choose a username: ")
+    password = input("Choose a password: ")
+
+    # Check if the username already exists in the worksheet
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        if row[username_col-1] == username:
+            print("Username already exists")
+            break
+    else:
+        # Find the next empty row and write the new user's information
+        next_row = len(worksheet["A"]) + 1
+        worksheet.cell(row=next_row, column=username_col).value = username
+        worksheet.cell(row=next_row, column=password_col).value = password
+        workbook.save(filename)
+        print("Registration successful!")
 
