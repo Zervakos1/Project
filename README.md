@@ -136,7 +136,19 @@ class Blackjack:
                     if choice != "register" and choice != "play" and choice != "quit":
                         print("Incorrect input. Please enter one of the choices shown.")
                 if choice == "register":
-                    ...
+                    # Check if the username already exists
+                    while True:
+                        username = input("Enter a username: ").strip()
+                        if username in users:
+                            print("Username already exists. Please choose a different username.")
+                        else:
+                            break    
+                    password = input("Enter a password: ").strip()
+                    # Add the new username and password to the file
+                    file.write(f"{username},{password}\n")
+                    # Create a new player with the given username
+                    self.players.append(Player(username))
+                    print(f"Welcome, {username}!")
                 elif choice == "play":
                     ...
                     for player in self.players:
@@ -224,7 +236,6 @@ blackjack_game.play()
 
             elif choice == "register":
 
-
                 # Check if the username already exists
                 while True:
                     username = input("Enter a username: ").strip()
@@ -233,10 +244,8 @@ blackjack_game.play()
                     else:
                         break    
                 password = input("Enter a password: ").strip()
-
                 # Add the new username and password to the file
                 file.write(f"{username},{password}\n")
-
                 # Create a new player with the given username
                 self.players.append(Player(username))
                 print(f"Welcome, {username}!")
