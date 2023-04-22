@@ -1,5 +1,3 @@
-# Project
-Softare engineering 
 import random
 class Card:
     def __init__(self, rank, suit):
@@ -49,41 +47,50 @@ class Player:
         self.name = name
         self.hand = Hand()
         self.chips = chips
-        self.dealer= Dealer()
+        self.dealer = Dealer()
 
     def hit_or_stand(self, deck):
         while True:
             print("-----------------------------------------------------------------")
             print(f"Yours cards are: {self.hand.cards[0]} and {self.hand.cards[1]}")
             print(f"The value is {self.hand.value}")
-            action = input(f"{self.name}, do you want to hit or stand? ")
-            if action.lower() == "hit":
-                self.hand.add_card(deck.deal_card())
-                self.hand.adjust_for_ace()
-                if self.hand.value > 21:
-                    print(f"{self.name} busts with a hand of {self.hand.value}.")
-                    return "bust"
-            elif action.lower() == "stand":
-                print(f"{self.name} stands with a hand of {self.hand.value}.")
-                return "stand"
-            else:
-                print("Invalid input. Please enter 'hit' or 'stand'.")
+            try:
+                action = input(f"{self.name}, do you want to hit or stand? ")
+                if action.lower() == "hit":
+                    self.hand.add_card(deck.deal_card())
+                    self.hand.adjust_for_ace()
+                    if self.hand.value > 21:
+                        print(f"{self.name} busts with a hand of {self.hand.value}.")
+                        return "bust"
+                    elif self.hand.value == 21:
+                        print(f"{self.name} has a hand of 21")
+                        break
+                    elif action.lower() == "stand":
+                        print(f"{self.name} stands with a hand of {self.hand.value}.")
+                        return "stand"
+                    else:
+                        raise ValueError("Invalid input. Please enter 'hit' or 'stand'.")
+            except ValueError as e:
+                print("Wrong input. Please enter 'hit' or 'stand'")
 
     def make_bet(self):
         while True:
-            bet = float(input(f"{self.name}, how many chips would you like to bet? "))
-            if bet < 1 or bet > self.chips:
+            try:
+                bet = float(input(f"{self.name}, how many chips would you like to bet? "))
+                if bet < 1 or bet > self.chips:
+                    raise ValueError(f"Invalid bet. Please enter a bet between 1 and {self.chips}.")
+                else:
+                    self.chips -= bet
+                    return bet
+            except ValueError as e:
                 print(f"Invalid bet. Please enter a bet between 1 and {self.chips}.")
-            else:
-                self.chips -= bet
-                return bet
-    def total(self):
-        if (player.hand.value > dealer.hand.value):
-            final = 2*bet
-            return final
-        elif(player.hand.value == dealer.hand.value):
-            final += bet
-            return final
+
+    def win_bet(self,bet):
+        self.chips += 2 * bet
+
+    def tie_bet(self,bet):
+        self.chips += bet
+        
 class Dealer:
     def __init__(self):
         self.name = "Dealer"
@@ -111,7 +118,7 @@ class Blackjack:
         print("-----------------------------------------------------------------")
         for player in self.players:
             print(f"{player.name}, it's your turn.")
-            player.make_bet()
+            bet = player.make_bet()
             player.hand.add_card(self.deck.deal_card())
             player.hand.add_card(self.deck.deal_card())
             print("-----------------------------------------------------------------")
@@ -125,7 +132,7 @@ class Blackjack:
         if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
             for player in self.players:
                 if player.hand.value <= 21:
-                    player.chips += 2 * player.make_bet()
+                    player.win_bet(bet)
                     print(f"{player.name} wins!")
                     print(f"{player.name} now has {player.chips} chips.")
         else:
@@ -133,78 +140,19 @@ class Blackjack:
             for player in self.players:
                 if player.hand.value <= 21:
                     if player.hand.value > dealer_hand_value:
-                        player.chips += 2 * player.total
-                        print("-----------------------------------------------------------------")
-                        print(f"{player.name} wins!")
-                        print(f"{player.name} now has {player.chips} chips.")
+                         player.win_bet(bet)
+                         print("-----------------------------------------------------------------")
+                         print(f"{player.name} wins!")
+                         print(f"{player.name} now has {player.chips} chips.")
                     elif player.hand.value == dealer_hand_value:
-                        player.chips += player.total
-                        print("-----------------------------------------------------------------")
-                        print(f"{player.name} ties with the dealer.")
-                        print(f"{player.name} now has {player.chips} chips.")
+                         player.tie_bet(bet)
+                         print("-----------------------------------------------------------------")
+                         print(f"{player.name} ties with the dealer.")
+                         print(f"{player.name} now has {player.chips} chips.")
                     else:
                         print("-----------------------------------------------------------------")
                         print(f"{player.name} loses.")
                         print(f"{player.name} now has {player.chips} chips.")
 blackjack_game = Blackjack()
 blackjack_game.play()
-
-
-
-
------------------------------------------------------------------------------------
-
-import openpyxl
-
-# Define the Excel file name and sheet name
-filename = "users.xlsx"
-sheetname = "users"
-
-# Load the workbook and select the worksheet
-workbook = openpyxl.load_workbook(filename)
-worksheet = workbook[sheetname]
-
-# Define the column indexes for username and password
-username_col = 1
-password_col = 2
-
-# Prompt the user to choose login or register
-while True:
-    choice = input("Do you want to login or register? ").strip().lower()
-    if choice == "login" or choice == "register":
-        break
-
-# Handle login
-if choice == "login":
-    # Prompt the user for their username and password
-    username = input("Username: ")
-    password = input("Password: ")
-
-    # Check if the username and password match a row in the worksheet
-    for row in worksheet.iter_rows(min_row=2, values_only=True):
-        if row[username_col-1] == username and row[password_col-1] == password:
-            print("Login successful!")
-            break
-    else:
-        print("Invalid username or password")
-
-# Handle register
-elif choice == "register":
-    # Prompt the user for their desired username and password
-    username = input("Choose a username: ")
-    password = input("Choose a password: ")
-
-    # Check if the username already exists in the worksheet
-    for row in worksheet.iter_rows(min_row=2, values_only=True):
-        if row[username_col-1] == username:
-            print("Username already exists")
-            break
-    else:
-        # Find the next empty row and write the new user's information
-        next_row = len(worksheet["A"]) + 1
-        worksheet.cell(row=next_row, column=username_col).value = username
-        worksheet.cell(row=next_row, column=password_col).value = password
-        workbook.save(filename)
-        print("Registration successful!")
-
 
