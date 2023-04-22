@@ -148,3 +148,63 @@ class Blackjack:
                         print(f"{player.name} now has {player.chips} chips.")
 blackjack_game = Blackjack()
 blackjack_game.play()
+
+
+
+
+-----------------------------------------------------------------------------------
+
+import openpyxl
+
+# Define the Excel file name and sheet name
+filename = "users.xlsx"
+sheetname = "users"
+
+# Load the workbook and select the worksheet
+workbook = openpyxl.load_workbook(filename)
+worksheet = workbook[sheetname]
+
+# Define the column indexes for username and password
+username_col = 1
+password_col = 2
+
+# Prompt the user to choose login or register
+while True:
+    choice = input("Do you want to login or register? ").strip().lower()
+    if choice == "login" or choice == "register":
+        break
+
+# Handle login
+if choice == "login":
+    # Prompt the user for their username and password
+    username = input("Username: ")
+    password = input("Password: ")
+
+    # Check if the username and password match a row in the worksheet
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        if row[username_col-1] == username and row[password_col-1] == password:
+            print("Login successful!")
+            break
+    else:
+        print("Invalid username or password")
+
+# Handle register
+elif choice == "register":
+    # Prompt the user for their desired username and password
+    username = input("Choose a username: ")
+    password = input("Choose a password: ")
+
+    # Check if the username already exists in the worksheet
+    for row in worksheet.iter_rows(min_row=2, values_only=True):
+        if row[username_col-1] == username:
+            print("Username already exists")
+            break
+    else:
+        # Find the next empty row and write the new user's information
+        next_row = len(worksheet["A"]) + 1
+        worksheet.cell(row=next_row, column=username_col).value = username
+        worksheet.cell(row=next_row, column=password_col).value = password
+        workbook.save(filename)
+        print("Registration successful!")
+
+
