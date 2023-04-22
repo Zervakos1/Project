@@ -176,59 +176,64 @@ blackjack_game.play()
 
 
 # Open the file for reading and writing
+        with open("users.txt", "a+") as file:
 
-with open("users.txt", "a+") as file:
-    
-    # Read the contents of the file
-    file.seek(0)
-    contents = file.read()
-    
-    # Create a dictionary to store usernames and passwords
-    users = {}
-    
-    # Split the contents of the file by newline and loop through each line
-    for line in contents.split("\n"):
-        
-        # Split each line into username and password and add to the dictionary
-        if line:
-            username, password = line.split(",")
-            users[username] = password
-    
-    # Ask the user to login or register
-    choice = ""
-    while choice != "login" and choice != "register" and choice != "quit":
-        choice = input("Do you want to login, register, or quit? ").strip().lower()
-        
-    # Handle the user's choice
-    if choice == "login":
-        username = input("Enter your username: ").strip()
-        password = input("Enter your password: ").strip()
-        
-        # Check if the username and password are correct
-        if username in users and users[username] == password:
-            print("Login successful!")
-        else:
-            print("Invalid username or password.")
-        
-    elif choice == "register":
-        username = input("Enter a new username: ").strip()
-        
-        # Check if the username already exists
-        if username in users:
-            print("Username already exists.")
-        else:
-            password = input("Enter a new password: ").strip()
-            
-            # Add the new username and password to the dictionary
-            users[username] = password
-            
-            # Write the updated dictionary to the file
+            # Read the contents of the file
             file.seek(0)
-            file.truncate()
-            for username, password in users.items():
+            contents = file.read()
+
+            # Create a dictionary to store usernames and passwords
+            users = {}
+
+            # Split the contents of the file by newline and loop through each line
+            for line in contents.split("\n"):
+
+                # Split each line into username and password and add to the dictionary
+                if line:
+                    username, password = line.split(",")
+                    users[username] = password
+
+            # Ask the user to login or register
+            choice = ""
+            while choice != "login" and choice != "register" and choice != "quit":
+                choice = input("Do you want to:\n1.login\n2.register \n3.play \n4.quit ").strip().lower()
+
+            # Handle the user's choice
+            if choice == "login":
+                username = input("Enter your username: ").strip()
+                password = input("Enter your password: ").strip()
+
+                # Check if the username and password are correct
+                if username in users and users[username] == password:
+                    self.players.append(Player(username))
+                    print(f"Welcome back, {username}!")
+                else:
+                    print("Incorrect username or password. Please try again.")
+                    return
+
+            elif choice == "register":
+                username = input("Enter a username: ").strip()
+                password = input("Enter a password: ").strip()
+
+                # Check if the username already exists
+                while True:
+                    if username in users:
+                        print("Username already exists. Please choose a different username.")
+                    else:
+                        break    
+
+                # Add the new username and password to the file
                 file.write(f"{username},{password}\n")
-                
-            print("Registration successful!")
-        
-    elif choice == "quit":
-        print("You have successfully quitted the program.")
+
+                # Create a new player with the given username
+                self.players.append(Player(username))
+                print(f"Welcome, {username}!")
+
+            elif choice == "quit":
+                print("You have successfully quitted the program.")
+                exit
+
+        # Print the list of players
+        print("Players:")
+        for player in self.players:
+            print(player.name)
