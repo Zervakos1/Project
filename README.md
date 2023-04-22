@@ -483,7 +483,7 @@ class Dealer:
             self.hand.add_card(deck.deal_card())
             self.hand.adjust_for_ace()
         if self.hand.value > 21:
-            print("Dealer busts!")
+            print(f"Dealer busts with a hand of {self.hand.value}.")
             return "bust"
         else:
             print(f"Dealer stands with a hand of {self.hand.value}.")
