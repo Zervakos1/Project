@@ -150,47 +150,49 @@ class Blackjack:
                     self.players.append(Player(username))
                     print(f"Welcome, {username}!")
                 elif choice == "play":
-                    ...
-                    for player in self.players:
-                        print(f"{player.name}, it's your turn.")
-                        bet = player.make_bet()
-                        player.hand.add_card(self.deck.deal_card())
-                        player.hand.add_card(self.deck.deal_card())
-                        print("-----------------------------------------------------------------")
-                        print("Dealer's turn.")
-                        self.dealer.hand.add_card(self.deck.deal_card())
-                        self.dealer.hand.add_card(self.deck.deal_card())
-                        print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
+                    playAgain = 1
+                    while playAgain == 1:
+                        ...
                         for player in self.players:
-                            if player.hit_or_stand(self.deck) == "bust":
-                                continue
-                        if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+                            print(f"{player.name}, it's your turn.")
+                            bet = player.make_bet()
+                            player.hand.add_card(self.deck.deal_card())
+                            player.hand.add_card(self.deck.deal_card())
+                            print("-----------------------------------------------------------------")
+                            print("Dealer's turn.")
+                            self.dealer.hand.add_card(self.deck.deal_card())
+                            self.dealer.hand.add_card(self.deck.deal_card())
+                            print(f"Dealer's face-up card is {self.dealer.hand.cards[0]}.")
                             for player in self.players:
-                                if player.hand.value <= 21:
-                                    player.win_bet(bet)
-                                    print(f"{player.name} wins!")
-                                    print(f"{player.name} now has {player.chips} chips.")
-                        else:
-                            dealer_hand_value = self.dealer.hand.value
-                            for player in self.players:
-                                if player.hand.value <= 21:
-                                    if player.hand.value > dealer_hand_value:
+                                if player.hit_or_stand(self.deck) == "bust":
+                                    continue
+                            if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
+                                for player in self.players:
+                                    if player.hand.value <= 21:
                                         player.win_bet(bet)
-                                        print("-----------------------------------------------------------------")
                                         print(f"{player.name} wins!")
                                         print(f"{player.name} now has {player.chips} chips.")
-                                    elif player.hand.value == dealer_hand_value:
-                                        player.tie_bet(bet)
-                                        print("-----------------------------------------------------------------")
-                                        print(f"{player.name} ties with the dealer.")
-                                        print(f"{player.name} now has {player.chips} chips.")
-                                    else:
-                                        print("-----------------------------------------------------------------")
-                                        print(f"{player.name} loses.")
-                                        print(f"{player.name} now has {player.chips} chips.")
-                else:
-                    quit == 1
-                    print "You have successfully quit the program"           
+                            else:
+                                dealer_hand_value = self.dealer.hand.value
+                                for player in self.players:
+                                    if player.hand.value <= 21:
+                                        if player.hand.value > dealer_hand_value:
+                                            player.win_bet(bet)
+                                            print("-----------------------------------------------------------------")
+                                            print(f"{player.name} wins!")
+                                            print(f"{player.name} now has {player.chips} chips.")
+                                        elif player.hand.value == dealer_hand_value:
+                                            player.tie_bet(bet)
+                                            print("-----------------------------------------------------------------")
+                                            print(f"{player.name} ties with the dealer.")
+                                            print(f"{player.name} now has {player.chips} chips.")
+                                        else:
+                                            print("-----------------------------------------------------------------")
+                                            print(f"{player.name} loses.")
+                                            print(f"{player.name} now has {player.chips} chips.")
+                  else:
+                      quit == 1
+                      print "You have successfully quit the program"           
 blackjack_game = Blackjack()
 blackjack_game.play()
 
