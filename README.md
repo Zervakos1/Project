@@ -152,7 +152,21 @@ class Blackjack:
                 elif choice == "play":
                     playAgain = 1
                     while playAgain == 1:
-                        ...
+                        while numberofplayers < 1 or numberofplayers > 7:
+                            numberofplayers = input("Please enter the number of players (1-7): ")
+                            if numberofplayers < 1 or numberofplayers > 7:
+                                print("Please enter a number from 1 to 7.")
+                        for i in range(1, numberofplayers):
+                            while True:
+                                username = input("Enter your username: ").strip()
+                                password = input("Enter your password: ").strip()
+                                # Check if the username and password are correct
+                                if username in users and users[username] == password:
+                                    self.players.append(Player(username))
+                                    print(f"Welcome back, {username}!")
+                                    break
+                                else:
+                                    print("Incorrect username or password. Please try again."
                         for player in self.players:
                             print(f"{player.name}, it's your turn.")
                             bet = player.make_bet()
