@@ -29,6 +29,52 @@ class Hand:
         self.cards = []
         self.value = 0
         self.aces = 0
+        self.hidden=True
+        
+    def add_card(self, card):
+        self.cards.append(card)
+        if self.hidden==True:
+            print(f"Card drawn: {card}")
+        self.value += card.value
+        if card.rank == "A":
+            self.aces += 11
+
+    def adjust_for_ace(self):
+        while self.value > 21 and self.aces > 0:
+            self.value -= 10
+            self.aces -= 1
+
+import random
+class Card:
+    def __init__(self, rank, suit):
+        self.rank = rank
+        self.suit = suit
+        if rank in ["J", "Q", "K"]:
+            self.value = 10
+        elif rank == "A":
+            self.value = 11
+        else:
+            self.value = int(rank)
+
+    def __str__(self):
+        suits_symbols = {"Hearts": "♥", "Diamonds": "♦", "Clubs": "♣", "Spades": "♠"}
+        return f"{self.rank} of {suits_symbols[self.suit]}"
+
+class Deck:
+    def __init__(self):
+        suits = ["Hearts","Diamonds", "Clubs", "Spades"]
+        ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+        self.cards = [Card(rank, suit) for suit in suits for rank in ranks]
+        random.shuffle(self.cards)
+
+    def deal_card(self):
+        return self.cards.pop()
+
+class Hand:
+    def __init__(self):
+        self.cards = []
+        self.value = 0
+        self.aces = 0
 
     def add_card(self, card):
         self.cards.append(card)
@@ -52,9 +98,13 @@ class Player:
     def hit_or_stand(self, deck):
         while True:
             print("-----------------------------------------------------------------")
-            print(f"Yours cards are: {self.hand.cards[0]} and {self.hand.cards[1]}")
+            for card in self.hand.cards:
+                print(card)
             print(f"The value is {self.hand.value}")
             try:
+                if self.hand.value == 21:
+                        print(f"{self.name} has a hand of 21")
+                        break
                 action = input(f"{self.name}, do you want to hit or stand? ")
                 if action.lower() == "hit":
                     self.hand.add_card(deck.deal_card())
@@ -62,14 +112,11 @@ class Player:
                     if self.hand.value > 21:
                         print(f"{self.name} busts with a hand of {self.hand.value}.")
                         return "bust"
-                    elif self.hand.value == 21:
-                        print(f"{self.name} has a hand of 21")
-                        break
                 elif action.lower() == "stand":
-                     print(f"{self.name} stands with a hand of {self.hand.value}.")
-                     return "stand"
+                    print(f"{self.name} stands with a hand of {self.hand.value}.")
+                    return "stand"
                 else:
-                     raise ValueError("Invalid input. Please enter 'hit' or 'stand'.")
+                    raise ValueError("Invalid input. Please enter 'hit' or 'stand'.")
             except ValueError as e:
                 print("Wrong input. Please enter 'hit' or 'stand'")
 
@@ -97,6 +144,9 @@ class Dealer:
         self.hand = Hand()
 
     def hit_until_stand_or_bust(self, deck):
+        print("-----------------------------------------------------------------")
+        for card in self.hand.cards:
+                print(card)
         print(f"The value is {self.hand.value}")
         while self.hand.value < 17:
             self.hand.add_card(deck.deal_card())
@@ -107,6 +157,7 @@ class Dealer:
         else:
             print(f"Dealer stands with a hand of {self.hand.value}.")
             return "stand"
+            
 class Blackjack:
     def __init__(self):
         self.players = [Player(f"Player {i+1}") for i in range(4)]
