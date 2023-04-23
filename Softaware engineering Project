@@ -29,52 +29,6 @@ class Hand:
         self.cards = []
         self.value = 0
         self.aces = 0
-        self.hidden=True
-        
-    def add_card(self, card):
-        self.cards.append(card)
-        if self.hidden==True:
-            print(f"Card drawn: {card}")
-        self.value += card.value
-        if card.rank == "A":
-            self.aces += 11
-
-    def adjust_for_ace(self):
-        while self.value > 21 and self.aces > 0:
-            self.value -= 10
-            self.aces -= 1
-
-import random
-class Card:
-    def __init__(self, rank, suit):
-        self.rank = rank
-        self.suit = suit
-        if rank in ["J", "Q", "K"]:
-            self.value = 10
-        elif rank == "A":
-            self.value = 11
-        else:
-            self.value = int(rank)
-
-    def __str__(self):
-        suits_symbols = {"Hearts": "♥", "Diamonds": "♦", "Clubs": "♣", "Spades": "♠"}
-        return f"{self.rank} of {suits_symbols[self.suit]}"
-
-class Deck:
-    def __init__(self):
-        suits = ["Hearts","Diamonds", "Clubs", "Spades"]
-        ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-        self.cards = [Card(rank, suit) for suit in suits for rank in ranks]
-        random.shuffle(self.cards)
-
-    def deal_card(self):
-        return self.cards.pop()
-
-class Hand:
-    def __init__(self):
-        self.cards = []
-        self.value = 0
-        self.aces = 0
 
     def add_card(self, card):
         self.cards.append(card)
