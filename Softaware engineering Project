@@ -140,7 +140,7 @@ class Player:
                 if self.hand.value == 21:
                         print(f"{self.name} has a hand of 21")
                         break
-                action = input(f"{self.name}, do you want to hit or stand? ")
+                action = input(f"{self.name}, do you want to hit or stand?\n")
                 if action.lower() == "hit":
                     self.hand.add_card(deck.deal_card())
                     self.hand.adjust_for_ace()
@@ -160,7 +160,7 @@ class Player:
     def make_bet(self):
         while True:
             try:
-                bet = float(input(f"{self.name}, how many chips would you like to bet? "))
+                bet = float(input(f"{self.name}, how many chips would you like to bet?\n"))
                 if bet < 1 or bet > float(self.chips):
                     raise ValueError(f"Invalid bet. Please enter a bet between 1 and {self.chips}.")
                 else:
@@ -291,7 +291,7 @@ class Blackjack:
                             # Get the number of players
                             while True:
                                 try:
-                                    num_players = int(input("Enter the number of players:"))
+                                    num_players = int(input("Enter the number of players:\n"))
                                     if num_players <= 0:
                                         print("Please enter a positive integer.")
                                     else:
