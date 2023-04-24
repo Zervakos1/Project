@@ -338,6 +338,11 @@ class Hand:
         while self.value > 21 and self.aces > 0:
             self.value -= 10
             self.aces -=1
+
+    def clear(self):
+        self.cards.clear()
+        self.value = 0
+        self.aces = 0
             
 
 class Player:
@@ -420,10 +425,14 @@ class Blackjack:
         self.login_register = LoginRegister()
         self.login_register.load_users()
         self.num_logged_in_players = 0
+
+    def clear_cards(self):
+        for player in self.players:
+            player.hand.clear()
+        self.dealer.hand.clear()
         
         
     def play(self):
-        counter=0
         # Clear the console screen
         if os.stat("users.txt").st_size == 0:
             print("No registered users found. Please register to play.")
@@ -469,7 +478,6 @@ class Blackjack:
                             self.num_logged_in_players += 1
                             self.players.append(Player(name))
                             print(f"Welcome back, {name}!")
-                            counter+=1
                             break
                         else:
                             print("Incorrect username or password. Please try again.")
@@ -484,21 +492,29 @@ class Blackjack:
                     if not self.current_player:
                         print("You must log in first to play.")
                     else:  
-                        # Get the names of the players
-                        for i in range(self.num_logged_in_players) :
+                    # Get the number of players
+                        while True:
+                            try:
+                                num_players = int(input("Enter the number of players: "))
+                                if num_players <= 0:
+                                    print("Please enter a positive integer.")
+                                else:
+                                    break
+                            except ValueError:
+                                print("Please enter a positive integer.")
+                        names=[]
+                        for i in range(num_players) :
                             while True:
                                 self.login_register.load_users()
                                 name = input(f"Enter the name of player {i+1}: ").strip()
+                                if name in names:
+                                    print("This player has already been added. Please enter a different name.")
                                 if self.login_register.login(name, ""):
                                     self.players.append(Player(name))
+                                    names.append(name)
                                     break
                                 else:
-                                    while True:
-                                        print("Player not found. Please try again.")
-                                        name=input(f"Enter the name of player {i+1}: ").strip()
-                                        if self.login_register.login(name, ""):
-                                            self.players.append(Player(name))
-                                            break
+                                    print("Player not found. Please try again.")
                                     for player in self.players:
                                         print(f"{player.name}, it's your turn.")
                                         bet = player.make_bet()
@@ -511,12 +527,12 @@ class Blackjack:
                                         card = self.deck.deal_card()
                                         self.dealer.hand.adjust_for_ace() 
                                         self.dealer.hand.add_card(card, dealer=True)
-                                    for i in range(1):
+                                    for j in range(1):
                                         print(f"Dealer's hand: {self.dealer.hand.cards[0]},  Hidden Card")
                     
                                     for player in self.players:
                                         if player.hit_or_stand(self.deck) == "bust":
-                                            continue
+                                            break
                                     if self.dealer.hit_until_stand_or_bust(self.deck) == "bust":
                                         for player in self.players:
                                             if player.hand.value <= 21:
@@ -541,10 +557,10 @@ class Blackjack:
                                                     print("-----------------------------------------------------------------")
                                                     print(f"{player.name} loses.")
                                                     print(f"{player.name} now has {player.chips} chips.")
-                                        playAgain=0
+                                    self.clear_cards()
                 elif choice == "quit" or choice == "4":
                         print("You have successfully quit the program")
                         return
-
+            playAgain=0
 blackjack_game = Blackjack()
 blackjack_game.play()   
