@@ -503,18 +503,22 @@ class Blackjack:
                             except ValueError:
                                 print("Please enter a positive integer.")
                         names=[]
-                        for i in range(num_players) :
-                            while True:
+                        while num_players >= 0 :
+                            stop=True
+                            while stop != False:
                                 self.login_register.load_users()
+                                i=0
                                 name = input(f"Enter the name of player {i+1}: ").strip()
+                                i+=1
                                 if name in names:
                                     print("This player has already been added. Please enter a different name.")
                                 if self.login_register.login(name, ""):
                                     self.players.append(Player(name))
                                     names.append(name)
+                                    if len(names) == num_players:
+                                        stop = False
                                     break
                                 else:
-                                    print("Player not found. Please try again.")
                                     for player in self.players:
                                         print(f"{player.name}, it's your turn.")
                                         bet = player.make_bet()
@@ -527,9 +531,8 @@ class Blackjack:
                                         card = self.deck.deal_card()
                                         self.dealer.hand.adjust_for_ace() 
                                         self.dealer.hand.add_card(card, dealer=True)
-                                    for j in range(1):
-                                        print(f"Dealer's hand: {self.dealer.hand.cards[0]},  Hidden Card")
-                    
+                                    print(f"Dealer's hand: {self.dealer.hand.cards[0]},  Hidden Card")
+                                    
                                     for player in self.players:
                                         if player.hit_or_stand(self.deck) == "bust":
                                             break
@@ -558,9 +561,13 @@ class Blackjack:
                                                     print(f"{player.name} loses.")
                                                     print(f"{player.name} now has {player.chips} chips.")
                                     self.clear_cards()
+                                    num_players-=1
+                                    
+                                    print(num_players)
+                                    print(stop)                               
                 elif choice == "quit" or choice == "4":
                         print("You have successfully quit the program")
                         return
-            playAgain=0
+                playAgain=0
 blackjack_game = Blackjack()
 blackjack_game.play()   
