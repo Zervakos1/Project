@@ -333,6 +333,7 @@ class Blackjack:
                                         player.win_bet(bet)
                                         print(f"{player.name} wins!")
                                         print(f"{player.name} now has {player.chips} chips.")
+                                    self.clear_cards()
                             else:
                                 dealer_hand_value = self.dealer.hand.value
                                 self.clear_cards()
