@@ -19,11 +19,14 @@ def rules():
     print("14.House rules say that the dealer must hit until he or she has at least 17, regardless of what the players have.") 
     print("15.In most casinos a dealer must also hit a soft 17 (such as an ace and a 6). The felt of the table will indicate whether or not the house hits or stands on a soft 17.")
 class User:
+    '''Creates the user and stores the name and password that later will be assing to player'''
+    
     def __init__(self, name, password):
         self.name = name
         self.password = password
 
 class LoginRegister:
+    ''' It reads the file if exists if not it creates and write in one and before the game starts it says that someone need to register in order to continue to main '''
     def __init__(self):
         self.users = []
 
@@ -71,6 +74,9 @@ class LoginRegister:
             password = input("Enter a password: ")
             self.register(name, password)
 class Card:
+    '''The Card class represents a single card in the deck. It has three attributes: rank, suit, and value.
+        The rank and suit attributes are strings that represent the rank and suit of the card, respectively.
+        The value attribute is an integer that represents the value of the card. Aces can be worth 1 or 11, and face cards (Jack, Queen, and King) are worth 10.  '''
     def __init__(self, rank, suit):
         self.rank = rank
         self.suit = suit
@@ -86,6 +92,8 @@ class Card:
         return f"{self.rank} of {suits_symbols[self.suit]}"
 
 class Deck:
+    '''The Deck class represents a deck of 52 playing cards. It has one attribute, cards, which is a list of 52 Card objects.
+    The Deck is initialized by generating all 52 cards and shuffling them randomly. The Deck class has one method, deal_card(), which returns a single Card object from the top of the deck.'''
     def __init__(self):
         suits = ["Hearts","Diamonds", "Clubs", "Spades"]
         ranks = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
@@ -96,6 +104,10 @@ class Deck:
         return self.cards.pop()
 
 class Hand:
+    '''The Hand class represents the player's hand. It has three attributes: cards, value, and aces. 
+    The cards attribute is a list of Card objects that represent the cards in the player's hand. 
+    The value attribute is an integer that represents the total value of the cards in the player's hand.
+    . The aces attribute is an integer that represents the number of aces in the player's hand.'''
     def __init__(self):
         self.cards = []
         self.value = 0
@@ -124,6 +136,7 @@ class Hand:
             
 
 class Player:
+    '''The Player class is used to create player objects that have a name, a hand of cards, the number of chips they have, and a reference to the dealer object. '''
     def __init__(self, name, chips=100):
         self.name= name
         self.hand = Hand()
@@ -176,6 +189,7 @@ class Player:
         self.chips += bet
         
 class Dealer:
+    '''The Dealer class is used to create a dealer object that has a name and a hand of cards. and its called when its time for the dealer to play or when the game starts'''
     def __init__(self):
         self.name = "Dealer"
         self.hand = Hand()
@@ -184,6 +198,7 @@ class Dealer:
     def hit_until_stand_or_bust(self, deck):
         print("-----------------------------------------------------------------")
         print("Dealers Turn")
+        # we show the hidden card when its time for the dealer to play
         print(f"{self.hand.cards[0]} and hidden card is {self.hand.cards[1]} ")
         for card in self.hand.cards[2:]:
                 print(f"Card drawn  {card}")
@@ -195,6 +210,8 @@ class Dealer:
             print(f"Dealer stands with a hand of {self.hand.value}.")
             return "stand"
 class Blackjack:
+    '''The Blackjack class is used to create a game object that has a number of players, a dealer, and a deck of cards. The blackjack class is the main where the programs starts to run.
+        create assign players to users and they can play a blackjack once they dont want to play again the must login in order to play'''
     def __init__(self):
         self.current_player = None  # Initialize current player to None
         self.players = []
@@ -203,6 +220,7 @@ class Blackjack:
         self.login_register = LoginRegister()
         self.login_register.load_users()
 
+    #clear cards when players dont want to play again
     def clear_cards(self):
         for player in self.players:
             player.hand.clear()
@@ -223,6 +241,7 @@ class Blackjack:
         print("Starting game of blackjack.")
         print("-----------------------------------------------------------------")
         print("Loading user information from file:")
+        #shows the info in case the user forgets the name
         print(f"{open('users.txt', 'r').read()}")
         quit = 0
         while quit != 1:
@@ -240,6 +259,7 @@ class Blackjack:
                             print(f"Welcome, {name}!\n")
                             print("Updated user file ")
                             print("Loading user information from file:")
+                            #Print again when someone is register
                             print(f"{open('users.txt', 'r').read()}")
                             break
                         else:
@@ -362,7 +382,9 @@ class Blackjack:
                                             print("-----------------------------------------------------------------")
                                             print(f"{player.name} loses.")
                                             print(f"{player.name} now has {player.chips} chips.")
-                                self.clear_cards()    
+                                self.clear_cards()
+                            #check if the clear cards are indeed clear and if the player
+                            # does not want to play again it clears the list   
                             while True:
                                 again = input("do you want to play again? Press yes or no\n")
                                 if again == "yes":
@@ -375,7 +397,7 @@ class Blackjack:
                                     break
                                 else:
                                     print("Wrong input. Type yes or no")
-                                                
+                #exit's the program                         
                 elif choice == "quit" or choice == "4":
                         print("You have successfully quit the program")
                         return
