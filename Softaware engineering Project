@@ -222,7 +222,8 @@ class Blackjack:
         input("Press Enter to continue...\n")
         print("Starting game of blackjack.")
         print("-----------------------------------------------------------------")
-        print(f"Loading user information from file: {open('users.txt', 'r').read()}")
+        print("Loading user information from file:")
+        print(f"{open('users.txt', 'r').read()}")
         quit = 0
         while quit != 1:
             choice = ""
@@ -238,7 +239,8 @@ class Blackjack:
                             print("Registration successful!")
                             print(f"Welcome, {name}!\n")
                             print("Updated user file ")
-                            print(f"Loading user information from file: {open('users.txt', 'r').read()}")
+                            print("Loading user information from file:")
+                            print(f"{open('users.txt', 'r').read()}")
                             break
                         else:
                             print("Username already exists. Please choose a different username.")
