@@ -1,3 +1,5 @@
+#Konstantinos Zervakos, Dimitris Skondras, Giorgos Stivaktakis
+#Softaware engineering project: Blackjack
 import random
 import os
 
